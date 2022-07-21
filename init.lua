@@ -36,7 +36,12 @@ local config = {
   -- set vim options here (vim.<first_key>.<second_key> =  value)
   options = {
     opt = {
-      relativenumber = true, -- sets vim.opt.relativenumber
+      relativenumber = true,
+      expandtab = true,
+      shiftwidth = 4,
+      tabstop = 4,
+      cursorline = true,
+      number = true,
     },
     g = {
       mapleader = " ", -- sets vim.g.mapleader
@@ -96,8 +101,19 @@ local config = {
       {
         'simrat39/rust-tools.nvim',
         requires = { "nvim-lspconfig", "nvim-lsp-installer", "Comment.nvim" }
-      }
+      },
+      'machakann/vim-sandwich',
+      {
+        'phaazon/hop.nvim',
+        branch = 'v2',
+        config = function()
+          require'hop'.setup {}
+        end
+      },
+      ["max397574/better-escape.nvim"] = { disable = true },
+      -- ["goolord/alpha-nvim"] = { disable = true },
     },
+
     -- All other entries override the setup() call for default plugins
     ["null-ls"] = function(config)
       local null_ls = require "null-ls"
@@ -131,6 +147,40 @@ local config = {
     },
     packer = {
       compile_path = vim.fn.stdpath "data" .. "/packer_compiled.lua",
+    },
+
+    bufferline = {
+      options = {
+        show_buffer_close_icons = false,
+        show_close_icon = false,
+        -- diagnostics = "nvim_lsp",
+      }
+    },
+
+    cinnamon = {
+      -- KEYMAPS:
+      default_keymaps = true,   -- Create default keymaps.
+      extra_keymaps = true,     -- Create extra keymaps.
+      extended_keymaps = true,  -- Create extended keymaps.
+      override_keymaps = true,  -- The plugin keymaps will override any existing keymaps.
+
+      -- OPTIONS:
+      always_scroll = true,     -- Scroll the cursor even when the window hasn't scrolled.
+      centered = true,          -- Keep cursor centered in window when using window scrolling.
+      default_delay = 5,        -- The default delay (in ms) between each line when scrolling.
+      hide_cursor = false,      -- Hide the cursor while scrolling. Requires enabling termguicolors!
+      horizontal_scroll = true, -- Enable smooth horizontal scrolling when view shifts left or right.
+      max_length = 500,         -- Maximum length (in ms) of a command. The line delay will be
+                                -- re-calculated. Setting to -1 will disable this option.
+      scroll_limit = -1,        -- Max number of lines moved before scrolling is skipped. Setting
+                                -- to -1 will disable this option.
+    },
+
+    aerial = {
+      default_keybinds = false,
+      on_attach = function()
+        -- do nothing?
+      end,
     },
   },
 
@@ -249,6 +299,18 @@ local config = {
       ["gd"] = { "<cmd>lua require('telescope.builtin').lsp_definitions()<CR>", desc = "Definition" },
       ["gr"] = { "<cmd>lua require('telescope.builtin').lsp_references()<CR>", desc = "Definition" },
       ["<leader>rn"] = { "<cmd>lua vim.lsp.buf.rename()<CR>", desc = "Definition" },
+      ["<leader>ss"] = { "<cmd>:HopPattern<CR>", desc = "Hop to pattern" },
+      ["<leader>sc"] = { "<cmd>:HopChar1<CR>", desc = "Hop to character" },
+      ["<leader>st"] = { "<cmd>:HopChar2<CR>", desc = "Hop to 2 characters" },
+      ["<leader>lr"] = { function() require("telescope.builtin").lsp_references() end, desc = "Search references" },
+      ["<leader>ld"] = { function() require("telescope.builtin").diagnostics() end, desc = "Search diagnostics" },
+      -- ['n'] = { "<cmd>lua Scroll('n', 1)<CR>", desc = "Smooth next match" },
+      -- ['T'] = { "<cmd>lua Scroll('{', 1)<CR>", desc = "Smooth previous paragraph" },
+      -- ['t'] = { "<cmd>lua Scroll('}', 1)<CR>", desc = "Smooth next paragraph" },
+      -- ['gg'] = { "<cmd>lua Scroll('gg', 1)<CR>", desc = "Top of buffer" },
+      -- ['G'] = { "<cmd>lua Scroll('G', 0, 1)<CR>", desc = "Bottom of buffer" },
+      -- ['g#'] = { "<cmd>lua Scroll('g#', 1)<CR>", desc = "Go to" },
+      -- ['g*'] = { "<cmd>lua Scroll('g*', 1)<CR>", desc = "Go to" },
     },
     t = {
       -- setting a mapping to false will disable it
@@ -260,6 +322,8 @@ local config = {
   -- good place to configuring augroups/autocommands and custom filetypes
   polish = function()
     -- Set key binding
+    -- local map = vim.keymap.set
+
     -- Set autocommands
     vim.api.nvim_create_augroup("packer_conf", { clear = true })
     vim.api.nvim_create_autocmd("BufWritePost", {
@@ -282,6 +346,7 @@ local config = {
       pattern = {"*.rs","*.js","*.json","*.toml","*.go"},
       command = "lua vim.lsp.buf.formatting_sync()",
     })
+    vim.cmd("runtime macros/sandwich/keymap/surround.vim")
 
     -- Set up custom filetypes
     -- vim.filetype.add {
