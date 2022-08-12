@@ -100,7 +100,7 @@ local config = {
       -- },
       {
         'simrat39/rust-tools.nvim',
-        requires = { "nvim-lspconfig", "nvim-lsp-installer", "Comment.nvim" }
+        requires = { "Comment.nvim" }
       },
       'machakann/vim-sandwich',
       {
@@ -162,7 +162,7 @@ local config = {
       default_keymaps = true,   -- Create default keymaps.
       extra_keymaps = true,     -- Create extra keymaps.
       extended_keymaps = true,  -- Create extended keymaps.
-      override_keymaps = true,  -- The plugin keymaps will override any existing keymaps.
+      override_keymaps = false,  -- The plugin keymaps will override any existing keymaps.
 
       -- OPTIONS:
       always_scroll = true,     -- Scroll the cursor even when the window hasn't scrolled.
@@ -298,7 +298,7 @@ local config = {
       ["<esc>"] = { ':noh<return><esc>', desc = "Esc" },
       ["gd"] = { "<cmd>lua require('telescope.builtin').lsp_definitions()<CR>", desc = "Definition" },
       ["gr"] = { "<cmd>lua require('telescope.builtin').lsp_references()<CR>", desc = "Definition" },
-      ["<leader>rn"] = { "<cmd>lua vim.lsp.buf.rename()<CR>", desc = "Definition" },
+      ["<leader>rn"] = { "<cmd>lua vim.lsp.buf.rename()<CR>", desc = "Rename" },
       ["<leader>ss"] = { "<cmd>:HopPattern<CR>", desc = "Hop to pattern" },
       ["<leader>sc"] = { "<cmd>:HopChar1<CR>", desc = "Hop to character" },
       ["<leader>st"] = { "<cmd>:HopChar2<CR>", desc = "Hop to 2 characters" },
