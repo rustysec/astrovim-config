@@ -255,6 +255,11 @@ local config = {
                           disabled = { "inactive-code", "unresolved-proc-macro", "unlinked-file", "macro-error" },
                           enableExperimental = true,
                       },
+                      cargo = {
+                          target = "aarch64-apple-darwin",
+                          -- target = "x86_64-pc-windows-gnu",
+                          -- target = "x86_64-unknown-linux-musl",
+                      }
                   },
               }
           },
