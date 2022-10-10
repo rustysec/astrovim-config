@@ -256,9 +256,12 @@ local config = {
                           enableExperimental = true,
                       },
                       cargo = {
-                          target = "aarch64-apple-darwin",
+                          -- target = "aarch64-apple-darwin",
                           -- target = "x86_64-pc-windows-gnu",
                           -- target = "x86_64-unknown-linux-musl",
+                      },
+                      checkOnSave = {
+                          command = "clippy"
                       }
                   },
               }
