@@ -42,6 +42,7 @@ local config = {
       tabstop = 4,
       cursorline = true,
       number = true,
+      showtabline = 0,
     },
     g = {
       mapleader = " ", -- sets vim.g.mapleader
@@ -114,6 +115,39 @@ local config = {
       -- ["goolord/alpha-nvim"] = { disable = true },
     },
 
+    ["heirline"] = function()
+      return {
+        -- Status line:
+        {
+          hl = { fg = "fg", bg = "bg" },
+          astronvim.status.component.mode(),
+          astronvim.status.component.git_branch(),
+          astronvim.status.component.file_info {
+            filename = { modify = ":p:." },
+            padding = { left = 1, right = 1 },
+          },
+          astronvim.status.component.fill(),
+          astronvim.status.component.lsp(),
+          astronvim.status.component.treesitter(),
+          astronvim.status.component.nav { scrollbar = false, percentage = false, padding = { left = 1 } },
+          astronvim.status.component.mode { surround = { separator = "right" } },
+        },
+        -- Winbar:
+        {
+          hl = { fg = "fg", bg = "bg" },
+          astronvim.status.component.file_info {
+            filename = { modify = ":p:." },
+            padding = { left = 1, right = 1 },
+          },
+          { provider = "::" },
+          astronvim.status.component.breadcrumbs { icon = { hl = true }, padding = { left = 1 } },
+          astronvim.status.component.fill(),
+          astronvim.status.component.git_diff(),
+          astronvim.status.component.diagnostics(),
+        },
+      }
+    end,
+
     -- All other entries override the setup() call for default plugins
     ["null-ls"] = function(config)
       local null_ls = require "null-ls"
@@ -129,11 +163,11 @@ local config = {
       -- set up null-ls's on_attach function
       config.on_attach = function(client)
         -- NOTE: You can remove this on attach function to disable format on save
-        if client.resolved_capabilities.document_formatting then
+        if client.server_capabilities.document_formatting then
           vim.api.nvim_create_autocmd("BufWritePre", {
             desc = "Auto format before save",
             pattern = "<buffer>",
-            callback = vim.lsp.buf.formatting_sync,
+            callback = vim.lsp.buf.format(),
           })
         end
       end
@@ -257,7 +291,7 @@ local config = {
                       },
                       cargo = {
                           -- target = "aarch64-apple-darwin",
-                          -- target = "x86_64-pc-windows-gnu",
+                          target = "x86_64-pc-windows-gnu",
                           -- target = "x86_64-unknown-linux-musl",
                       },
                       checkOnSave = {
@@ -351,8 +385,8 @@ local config = {
     vim.api.nvim_create_autocmd("BufWritePre", {
       desc = "Auto Format on save",
       group = "auto_format",
-      pattern = {"*.rs","*.js","*.json","*.toml","*.go"},
-      command = "lua vim.lsp.buf.formatting_sync()",
+      pattern = {"*.rs","*.json","*.toml","*.go"},
+      command = "lua vim.lsp.buf.format({ async = true })",
     })
     vim.cmd("runtime macros/sandwich/keymap/surround.vim")
 
